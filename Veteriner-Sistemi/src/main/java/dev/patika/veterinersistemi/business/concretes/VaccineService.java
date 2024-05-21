@@ -1,12 +1,13 @@
 package dev.patika.veterinersistemi.business.concretes;
 
 import dev.patika.veterinersistemi.business.abstracts.IVaccineService;
-import dev.patika.veterinersistemi.core.config.exception.NotFoundException;
-import dev.patika.veterinersistemi.core.utiles.Msg;
+import dev.patika.veterinersistemi.core.config.exeption.NotFoundException;
+import dev.patika.veterinersistemi.core.config.utiles.Msg;
 import dev.patika.veterinersistemi.dao.AnimalRepository;
 import dev.patika.veterinersistemi.dao.VaccineRepository;
 import dev.patika.veterinersistemi.entity.Animal;
 import dev.patika.veterinersistemi.entity.Vaccine;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,24 +19,15 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class VaccineService implements IVaccineService {
-
     // VaccineRepo bağımlılığını enjekte etmek için constructor
     private final VaccineRepository vaccineRepo;
     private final AnimalRepository animalRepo;
-
-    // Constructor enjeksiyonu
-
-
-    public VaccineService(VaccineRepository vaccineRepo, AnimalRepository animalRepo) {
-        this.vaccineRepo = vaccineRepo;
-        this.animalRepo = animalRepo;
-    }
-
     @Override
     public Vaccine save(Vaccine vaccine, Long animalId) {
-        log.info("vaccine : {},animalId : {}",vaccine,animalId);
+       log.info("vaccine : {},animalId : {}",vaccine,animalId);
         Animal animal = animalRepo.findById(animalId)
                 .orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
         vaccine.setAnimal(animal);
@@ -112,8 +104,11 @@ public class VaccineService implements IVaccineService {
         return vaccineRepo.findByAnimalIdAndProtectionStartDateBetween(animalId, startDate, endDate);
 
     }
+@Override
+    public boolean existsActiveVaccineByAnimalIdAndVaccineCode(Long animalId, String vaccineCode) {
+        // Belirtilen hayvan ID'sine ve aşı koduna sahip aktif bir aşının varlığını kontrol et
+        return vaccineRepo.existsByAnimalIdAndCodeAndProtectionFinishDateAfter(animalId, vaccineCode, LocalDate.now());
+    }
 
 
 }
-
-

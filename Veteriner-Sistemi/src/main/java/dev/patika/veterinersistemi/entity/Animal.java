@@ -1,4 +1,5 @@
 package dev.patika.veterinersistemi.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,26 +1,27 @@
 package dev.patika.veterinersistemi.business.concretes;
 
+
 import dev.patika.veterinersistemi.business.abstracts.IAnimalService;
-import dev.patika.veterinersistemi.core.config.exception.NotFoundException;
-import dev.patika.veterinersistemi.core.utiles.Msg;
+import dev.patika.veterinersistemi.core.config.exeption.NotFoundException;
+import dev.patika.veterinersistemi.core.config.utiles.Msg;
 import dev.patika.veterinersistemi.dao.AnimalRepository;
 import dev.patika.veterinersistemi.entity.Animal;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AnimalService implements IAnimalService {
     // AnimalRepo bağımlılığını enjekte etmek için constructor
     private final AnimalRepository animalRepo;
 
     // Constructor enjeksiyonu
-    public AnimalService(AnimalRepository animalRepo) {
-        this.animalRepo = animalRepo;
-    }
 
     // Yeni bir hayvan kaydetmek için
     @Override
@@ -66,4 +67,11 @@ public class AnimalService implements IAnimalService {
     public List<Animal> getAnimalsByCustomerId(Long customerId) {
         return this.animalRepo.findByCustomerId(customerId);
     }
-}
+
+    @Override
+    public Optional<Animal> getAnimalByName(String name) {
+            return animalRepo.findByName(name);
+        }
+    }
+
+

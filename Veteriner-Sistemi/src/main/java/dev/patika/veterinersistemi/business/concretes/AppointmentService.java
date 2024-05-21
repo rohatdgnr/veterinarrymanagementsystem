@@ -1,14 +1,17 @@
 package dev.patika.veterinersistemi.business.concretes;
 
+
 import dev.patika.veterinersistemi.business.abstracts.IAppointmentService;
-import dev.patika.veterinersistemi.core.config.exception.NotFoundException;
-import dev.patika.veterinersistemi.core.utiles.Msg;
+import dev.patika.veterinersistemi.core.config.exeption.NotFoundException;
+import dev.patika.veterinersistemi.core.config.utiles.Msg;
 import dev.patika.veterinersistemi.dao.AppointmentRepository;
 import dev.patika.veterinersistemi.entity.Appointment;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -66,12 +69,40 @@ public class AppointmentService implements IAppointmentService {
         return this.appointmentRepo.findByAnimalId(animalId);
     }
 
-    // Belirli bir tarih aralığındaki tüm randevuları getirir
     @Override
+
+    public List<Appointment> getAppointmentsByDateRange(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+        return appointmentRepo.findByAppointmentDateTimeBetween(startDateTime, endDateTime);
+    }
+    // Belirli bir tarih aralığındaki tüm randevuları getirir
+  /*  @Override
     public List<Appointment> getAppointmentsByDateRange(String startDate, String endDate) {
         LocalDateTime startDateTime = LocalDateTime.parse(startDate);
         LocalDateTime endDateTime = LocalDateTime.parse(endDate);
         List<Appointment> appointments = appointmentRepo.findByAppointmentDateTimeBetween(startDateTime, endDateTime);
         return appointments;
+    }*/
+
+    @Override
+    public boolean isAppointmentConflict(Long doctorId, LocalDateTime dateTime) {
+        List<Appointment> conflictingAppointments = appointmentRepo.findByDoctorIdAndAppointmentDateTime(doctorId, dateTime);
+        return !conflictingAppointments.isEmpty();
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByDateRangeAndDoctorId(LocalDate startDate, LocalDate endDate, Long doctorId) {
+        // Doktor ID'sine göre ve tarih aralığına göre randevuları al
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIDNIGHT);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.of(23, 59, 59));
+        return appointmentRepo.findByDateRangeAndDoctorId(startDateTime, endDateTime, doctorId);
+    }
+    @Override
+    public List<Appointment> getAppointmentsByDateRangeAndAnimalId(LocalDate startDate, LocalDate endDate, Long animalId) {
+        // Doktor ID'sine göre ve tarih aralığına göre randevuları al
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIDNIGHT);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.of(23, 59, 59));
+        return appointmentRepo.findByDateRangeAndAnimalId(startDateTime, endDateTime, animalId);
     }
 }

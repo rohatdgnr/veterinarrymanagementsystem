@@ -1,14 +1,16 @@
 package dev.patika.veterinersistemi.business.concretes;
 
-import dev.patika.veterinersistemi.core.config.exception.NotFoundException;
-import dev.patika.veterinersistemi.core.utiles.Msg;
+
+import dev.patika.veterinersistemi.business.abstracts.IDoctorService;
+import dev.patika.veterinersistemi.core.config.exeption.NotFoundException;
+import dev.patika.veterinersistemi.core.config.utiles.Msg;
 import dev.patika.veterinersistemi.dao.DoctorRepository;
 import dev.patika.veterinersistemi.entity.Doctor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import dev.patika.veterinersistemi.business.abstracts.IDoctorService;
+
 @Service
 public class DoctorService implements IDoctorService {
     // DoctorRepo bağımlılığını enjekte etmek için constructor

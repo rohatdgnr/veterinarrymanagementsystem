@@ -1,16 +1,20 @@
 package dev.patika.veterinersistemi.api;
 
+
+
 import dev.patika.veterinersistemi.business.abstracts.ICustomerService;
+import dev.patika.veterinersistemi.core.config.EmailAlreadyRegisteredException;
 import dev.patika.veterinersistemi.core.config.modelMapper.IModelMapperService;
-import dev.patika.veterinersistemi.core.result.Result;
-import dev.patika.veterinersistemi.core.result.ResultData;
-import dev.patika.veterinersistemi.core.utiles.ResultHelper;
+import dev.patika.veterinersistemi.core.config.result.Result;
+import dev.patika.veterinersistemi.core.config.result.ResultData;
+import dev.patika.veterinersistemi.core.config.utiles.ResultHelper;
 import dev.patika.veterinersistemi.dto.CursorResponse;
 import dev.patika.veterinersistemi.dto.request.Customer.CustomerSaveRequest;
 import dev.patika.veterinersistemi.dto.request.Customer.CustomerUpdateRequest;
 import dev.patika.veterinersistemi.dto.response.CustomerResponse;
 import dev.patika.veterinersistemi.entity.Customer;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,24 +23,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v1/customers")
-public class CustomerController {
-    private final ICustomerService customerService;
-    private final IModelMapperService modelMapper;
+@RequestMapping("api/v1/customers")
+@RequiredArgsConstructor
+    public class CustomerController {
+        private final ICustomerService customerService;
+        private final IModelMapperService modelMapper;
 
-
-    public CustomerController(ICustomerService customerService, IModelMapperService modelMapper) {
-        this.customerService = customerService;
-        this.modelMapper = modelMapper;
-    }
     // Yeni bir müşteri kaydetmek için POST endpoint'i
-    @PostMapping()
+    @PostMapping("/created")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<CustomerResponse> save(@Valid @RequestBody CustomerSaveRequest customerSaveRequest ){
+        if (customerService.existsByMail(customerSaveRequest.getMail())) {
+            throw new EmailAlreadyRegisteredException("Email is already registered");
+        }
         Customer saveCustomer = this.modelMapper.forRequest().map(customerSaveRequest,Customer.class);
         this.customerService.save(saveCustomer);
         return ResultHelper.created(this.modelMapper.forResponse().map(saveCustomer,CustomerResponse.class));
     }
+
 
     // Müşteri detaylarını almak için GET endpoint'i
     @GetMapping("/{id}")
@@ -63,11 +67,11 @@ public class CustomerController {
     }
 
     // Sayfalı olarak müşterileri listelemek için GET endpoint'i
-    @GetMapping()
+    @GetMapping("/customersList")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<CursorResponse<CustomerResponse>> cursor(
             @RequestParam(name = "page", required = false,defaultValue = "0") int page,
-            @RequestParam(name = "pageSize", required = false,defaultValue = "2") int pageSize
+            @RequestParam(name = "pageSize", required = false,defaultValue = "5") int pageSize
     ){
         // Sayfalama için ilgili servis metodu çağrılıyor
         Page<Customer> categoryPage = this.customerService.cursor(page,pageSize);
@@ -77,7 +81,7 @@ public class CustomerController {
         return  ResultHelper.cursor(customerResponsePage);
     }
     //müşterileri isme göre filtreleyen bir endpoint
-    @GetMapping("/filter") //http://localhost:8047/v1/customers/filter?name=Joseph örnek aram URL'si
+    @GetMapping("/filter") //http://localhost:8047/v1/customers/filter?name=John Doe örnek aram URL'si
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<CustomerResponse>> getCustomersByName(@RequestParam("name") String name) {
         List<Customer> customers = this.customerService.getCustomersByName(name);
@@ -89,6 +93,5 @@ public class CustomerController {
 
         return ResultHelper.success(customerResponses);
     }
-
 
 }

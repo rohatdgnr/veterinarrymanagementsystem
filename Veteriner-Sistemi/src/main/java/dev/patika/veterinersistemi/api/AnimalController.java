@@ -1,11 +1,12 @@
 package dev.patika.veterinersistemi.api;
 
+
 import dev.patika.veterinersistemi.business.abstracts.IAnimalService;
 import dev.patika.veterinersistemi.business.abstracts.ICustomerService;
 import dev.patika.veterinersistemi.core.config.modelMapper.IModelMapperService;
-import dev.patika.veterinersistemi.core.result.Result;
-import dev.patika.veterinersistemi.core.result.ResultData;
-import dev.patika.veterinersistemi.core.utiles.ResultHelper;
+import dev.patika.veterinersistemi.core.config.result.Result;
+import dev.patika.veterinersistemi.core.config.result.ResultData;
+import dev.patika.veterinersistemi.core.config.utiles.ResultHelper;
 import dev.patika.veterinersistemi.dto.request.Animal.AnimalSaveRequest;
 import dev.patika.veterinersistemi.dto.request.Animal.AnimalUpdateRequest;
 import dev.patika.veterinersistemi.dto.response.AnimalResponse;
@@ -14,28 +15,23 @@ import dev.patika.veterinersistemi.entity.Animal;
 import dev.patika.veterinersistemi.entity.Customer;
 import dev.patika.veterinersistemi.entity.Vaccine;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/animals")
-
+@RequiredArgsConstructor
 public class AnimalController {
     private final IAnimalService animalService;
     private final ICustomerService customerService;
     private final IModelMapperService modelMapper;
 
     // Constructor-based dependency injection
-    public AnimalController(IAnimalService animalService,
-                            ICustomerService customerService,
-                            IModelMapperService modelMapper) {
-        this.animalService = animalService;
-        this.customerService = customerService;
-        this.modelMapper = modelMapper;
-    }
 
     // Belirli bir hayvanın detaylarını getiren endpoint
     @GetMapping("/{id}")
@@ -46,7 +42,7 @@ public class AnimalController {
     }
 
     // Yeni hayvan ekleme endpoint'i
-    @PostMapping("/createdNew")
+    @PostMapping("/created")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<AnimalResponse> save(@Valid @RequestBody AnimalSaveRequest animalSaveRequest ){
         Animal saveAnimal = this.modelMapper.forRequest().map(animalSaveRequest,Animal.class);
@@ -58,7 +54,7 @@ public class AnimalController {
         return ResultHelper.created(this.modelMapper.forResponse().map(saveAnimal,AnimalResponse.class));
     }
 
-
+    // Hayvan güncelleme endpoint'i
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<AnimalResponse> update(@Valid @RequestBody AnimalUpdateRequest animalUpdateRequest ){
@@ -90,7 +86,7 @@ public class AnimalController {
 
         return ResultHelper.success(vaccineResponses);
     }
-    @GetMapping("/filter") //http://localhost:8047/v1/animals/filter?name=Şila
+    @GetMapping("/filterAnimalName") //http://localhost:8047/v1/animals/filter?name=Şila
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<AnimalResponse>> getAnimalsByName(@RequestParam("name") String name) {
         List<Animal> animals = this.animalService.getAnimalsByName(name);
@@ -102,7 +98,7 @@ public class AnimalController {
 
         return ResultHelper.success(animalResponses);
     }
-    @GetMapping("/customer/{customerId}")
+    @GetMapping("/customer/filterId{customerId}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<AnimalResponse>> getAnimalsByCustomerId(@PathVariable("customerId") Long customerId) {
         List<Animal> animals = this.animalService.getAnimalsByCustomerId(customerId);
@@ -113,5 +109,23 @@ public class AnimalController {
                 .collect(Collectors.toList());
 
         return ResultHelper.success(animalResponses);
+    }
+    @GetMapping("/customer/filterCustomerName/{customerName}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<List<AnimalResponse>> getAnimalsByCustomerName(@PathVariable("customerName") String customerName) {
+        Optional<Customer> customerOptional = this.customerService.getCustomerByName(customerName);
+
+        if (customerOptional.isPresent()) {
+            Customer customer = customerOptional.get();
+            List<Animal> animals = this.animalService.getAnimalsByCustomerId(customer.getId());
+
+            List<AnimalResponse> animalResponses = animals.stream()
+                    .map(animal -> this.modelMapper.forResponse().map(animal, AnimalResponse.class))
+                    .collect(Collectors.toList());
+
+            return ResultHelper.success(animalResponses);
+        } else {
+            return ResultHelper.errorWithData("Kullanıcı bulunamadı.", null, HttpStatus.NOT_FOUND);
+        }
     }
 }

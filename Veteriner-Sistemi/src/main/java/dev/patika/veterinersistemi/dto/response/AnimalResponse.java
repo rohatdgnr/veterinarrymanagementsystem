@@ -10,11 +10,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnimalResponse {
+    private Long id;
     private String name;
     private String species;
     private String breed;
     private String gender;
     private String colour;
     private LocalDate dateOfBirth;
-    private long customerId;
+    private Long customerId;
 }

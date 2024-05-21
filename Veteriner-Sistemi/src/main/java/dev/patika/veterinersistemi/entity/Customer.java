@@ -1,11 +1,11 @@
 package dev.patika.veterinersistemi.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -32,9 +32,6 @@ public class Customer { //Customer Entitylerimizin bulundugu sınıfımız
 
     @Column(name = "customer_city", length = 255)
     private String city;
-
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Animal> animalList;
 
 
 }

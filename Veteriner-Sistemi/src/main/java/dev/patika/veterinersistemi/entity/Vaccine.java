@@ -22,7 +22,7 @@ public class Vaccine {
     @Column(name = "vaccine_name", nullable = false)
     private String name;
 
-    @Column(name = "vaccine_code",nullable = false)
+    @Column(name = "vaccine_code", nullable = false)
     private String code;
 
     //@Temporal(TemporalType.DATE)
@@ -47,5 +47,4 @@ public class Vaccine {
                 ", protectionFinishDate=" + protectionFinishDate +
                 '}';
     }
-
 }

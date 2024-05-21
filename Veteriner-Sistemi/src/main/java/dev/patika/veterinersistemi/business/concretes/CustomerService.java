@@ -1,29 +1,26 @@
 package dev.patika.veterinersistemi.business.concretes;
 
+
 import dev.patika.veterinersistemi.business.abstracts.ICustomerService;
-import dev.patika.veterinersistemi.core.config.exception.NotFoundException;
-import dev.patika.veterinersistemi.core.utiles.Msg;
+import dev.patika.veterinersistemi.core.config.exeption.NotFoundException;
+import dev.patika.veterinersistemi.core.config.utiles.Msg;
 import dev.patika.veterinersistemi.dao.CustomerRepository;
 import dev.patika.veterinersistemi.entity.Customer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+// CustomerRepo bağımlılığını enjekte etmek için constructor
 public class CustomerService implements ICustomerService {
-
-    // CustomerRepo bağımlılığını enjekte etmek için constructor
     private final CustomerRepository customerRepo;
-
-    // Constructor enjeksiyonu
-    public CustomerService(CustomerRepository customerRepo){
-        this.customerRepo = customerRepo;
-    }
-
-    // Yeni bir müşteri kaydetmek için
     @Override
     public Customer save(Customer customer) {
         return this.customerRepo.save(customer);// CustomerRepo'nun save metodu kullanılır
@@ -51,6 +48,7 @@ public class CustomerService implements ICustomerService {
         return this.customerRepo.save(customer);
     }
 
+
     // Müşteri silmek için
     @Override
     public boolean delete(long id) {
@@ -59,9 +57,19 @@ public class CustomerService implements ICustomerService {
         return true; // Silme işlemi başarılı olduğu için true döndürülür
     }
 
+    @Override
+    public boolean existsByMail(String email) {
+        return customerRepo.existsByMail(email);
+    }
+
     // İsim içeren müşterileri getirmek için
     @Override
     public List<Customer> getCustomersByName(String name) {
         return customerRepo.findByNameContainingIgnoreCase(name);// İsim içeren müşterileri getirir
+    }
+
+    @Override
+    public Optional<Customer> getCustomerByName(String name) {
+        return customerRepo.findByName(name);
     }
 }

@@ -1,15 +1,17 @@
 package dev.patika.veterinersistemi.api;
 
+
 import dev.patika.veterinersistemi.business.abstracts.IVaccineService;
 import dev.patika.veterinersistemi.core.config.modelMapper.IModelMapperService;
-import dev.patika.veterinersistemi.core.result.Result;
-import dev.patika.veterinersistemi.core.result.ResultData;
-import dev.patika.veterinersistemi.core.utiles.ResultHelper;
+import dev.patika.veterinersistemi.core.config.result.Result;
+import dev.patika.veterinersistemi.core.config.result.ResultData;
+import dev.patika.veterinersistemi.core.config.utiles.ResultHelper;
 import dev.patika.veterinersistemi.dto.request.Vaccine.VaccineSaveRequest;
 import dev.patika.veterinersistemi.dto.request.Vaccine.VaccineUpdateRequest;
 import dev.patika.veterinersistemi.dto.response.VaccineResponse;
 import dev.patika.veterinersistemi.entity.Vaccine;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,20 +22,22 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/vaccines")
+@RequiredArgsConstructor
 public class VaccineController {
     private final IVaccineService vaccineService;
     private final IModelMapperService modelMapper;
 
-    public VaccineController(IVaccineService vaccineService, IModelMapperService modelMapper) {
-        this.vaccineService = vaccineService;
-        this.modelMapper = modelMapper;
-    }
 
-    @PostMapping()
+    @PostMapping("/created")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<VaccineResponse> save(@Valid @RequestBody VaccineSaveRequest vaccineSaveRequest ){
         Vaccine saveVaccine = this.modelMapper.forRequest().map(vaccineSaveRequest, Vaccine.class);
         Long animalId = vaccineSaveRequest.getAnimalId();
+        // Hayvanın aynı kodla herhangi bir aktif aşısı var mı diye kontrol et
+
+        if (vaccineService.existsActiveVaccineByAnimalIdAndVaccineCode(animalId, vaccineSaveRequest.getCode())) {
+            return ResultHelper.errorWithData("Bu hayvan için koruma süresi dolmamış bir aşı zaten mevcut.",null,HttpStatus.BAD_REQUEST);
+        }
         Vaccine savedVaccine = this.vaccineService.save(saveVaccine, animalId);
         return ResultHelper.created(this.modelMapper.forResponse().map(savedVaccine, VaccineResponse.class));
     }

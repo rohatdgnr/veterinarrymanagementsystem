@@ -26,7 +26,7 @@ public class Doctor {//Doctor Entitylerimizin bulundugu sınıfımız
     private String phone;
 
     @Column(name = "doctor_mail", nullable = false, unique = true)
-    private String mail;
+    private String email;
 
     @Column(name = "doctor_address", length = 255)
     private String address;

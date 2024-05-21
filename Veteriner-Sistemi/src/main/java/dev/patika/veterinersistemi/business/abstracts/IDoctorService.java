@@ -1,5 +1,6 @@
 package dev.patika.veterinersistemi.business.abstracts;
 
+
 import dev.patika.veterinersistemi.entity.Doctor;
 import org.springframework.data.domain.Page;
 

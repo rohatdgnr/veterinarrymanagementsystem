@@ -1,29 +1,28 @@
 package dev.patika.veterinersistemi.api;
 
+
 import dev.patika.veterinersistemi.business.abstracts.IDoctorService;
 import dev.patika.veterinersistemi.core.config.modelMapper.IModelMapperService;
-import dev.patika.veterinersistemi.core.result.Result;
-import dev.patika.veterinersistemi.core.result.ResultData;
-import dev.patika.veterinersistemi.core.utiles.ResultHelper;
+import dev.patika.veterinersistemi.core.config.result.Result;
+import dev.patika.veterinersistemi.core.config.result.ResultData;
+import dev.patika.veterinersistemi.core.config.utiles.ResultHelper;
 import dev.patika.veterinersistemi.dto.request.Doctor.DoctorSaveRequest;
 import dev.patika.veterinersistemi.dto.request.Doctor.DoctorUpdateRequest;
 import dev.patika.veterinersistemi.dto.response.DoctorResponse;
 import dev.patika.veterinersistemi.entity.Doctor;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/doctors")
+@RequiredArgsConstructor
 public class DoctorConroller {
     private final IDoctorService doctorService;
     private final IModelMapperService modelMapper;
 
     // Constructor based dependency injection
-    public DoctorConroller(IDoctorService doctorService, IModelMapperService modelMapper) {
-        this.doctorService = doctorService;
-        this.modelMapper = modelMapper;
-    }
 
     // Doktorun detaylarını almak için GET endpoint'i
     @GetMapping("/{id}")
@@ -34,7 +33,7 @@ public class DoctorConroller {
     }
 
     // Yeni bir doktor kaydetmek için POST endpoint'i
-    @PostMapping
+    @PostMapping("/created")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<DoctorResponse> save(@Valid @RequestBody DoctorSaveRequest doctorSaveRequest ){
         Doctor saveDoctor = this.modelMapper.forRequest().map(doctorSaveRequest,Doctor.class);

@@ -1,5 +1,7 @@
 package dev.patika.veterinersistemi.business.abstracts;
 
+
+
 import dev.patika.veterinersistemi.entity.Vaccine;
 import org.springframework.data.domain.Page;
 
@@ -7,7 +9,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface IVaccineService {
-
 
     // Aşıyı kaydetmek için
     Vaccine save(Vaccine vaccine, Long animalId);
@@ -26,4 +27,5 @@ public interface IVaccineService {
     List<Vaccine> getVaccinesByDateRange(LocalDate startDate, LocalDate endDate);
     List<Vaccine> getByProtectionStartDateBetween(LocalDate startDate, LocalDate endDate);
 
+    boolean existsActiveVaccineByAnimalIdAndVaccineCode(Long animalId, String vaccineCode);
 }

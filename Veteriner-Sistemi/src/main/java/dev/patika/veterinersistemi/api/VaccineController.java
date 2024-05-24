@@ -1,6 +1,7 @@
 package dev.patika.veterinersistemi.api;
 
 
+import dev.patika.veterinersistemi.business.abstracts.IAnimalService;
 import dev.patika.veterinersistemi.business.abstracts.IVaccineService;
 import dev.patika.veterinersistemi.core.config.modelMapper.IModelMapperService;
 import dev.patika.veterinersistemi.core.config.result.Result;
@@ -9,6 +10,8 @@ import dev.patika.veterinersistemi.core.config.utiles.ResultHelper;
 import dev.patika.veterinersistemi.dto.request.Vaccine.VaccineSaveRequest;
 import dev.patika.veterinersistemi.dto.request.Vaccine.VaccineUpdateRequest;
 import dev.patika.veterinersistemi.dto.response.VaccineResponse;
+import dev.patika.veterinersistemi.entity.Animal;
+import dev.patika.veterinersistemi.entity.Customer;
 import dev.patika.veterinersistemi.entity.Vaccine;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 public class VaccineController {
     private final IVaccineService vaccineService;
     private final IModelMapperService modelMapper;
+    private final IAnimalService animalService;
 
 
     @PostMapping("/created")
@@ -57,8 +61,17 @@ public class VaccineController {
     }
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResultData<VaccineResponse> update(@Valid @RequestBody VaccineUpdateRequest vaccineUpdateRequest ){
+    public ResultData<VaccineResponse> update(@PathVariable Long id, @Valid @RequestBody VaccineUpdateRequest vaccineUpdateRequest) {
         Vaccine updateVaccine = this.modelMapper.forRequest().map(vaccineUpdateRequest, Vaccine.class);
+
+        // Yeni hayvan kimliğini al ve aşının hayvan bilgilerini güncelle
+        Animal animal = this.animalService.get(vaccineUpdateRequest.getAnimalId());
+        updateVaccine.setAnimal(animal);
+
+
+        // Aşının ID'sini ayarla
+        updateVaccine.setId(id);
+
         this.vaccineService.update(updateVaccine);
         return ResultHelper.success(this.modelMapper.forResponse().map(updateVaccine, VaccineResponse.class));
     }

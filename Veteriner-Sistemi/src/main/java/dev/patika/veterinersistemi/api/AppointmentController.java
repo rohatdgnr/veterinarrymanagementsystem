@@ -10,6 +10,7 @@ import dev.patika.veterinersistemi.core.config.result.Result;
 import dev.patika.veterinersistemi.core.config.result.ResultData;
 import dev.patika.veterinersistemi.core.config.utiles.ResultHelper;
 import dev.patika.veterinersistemi.dto.request.Appointment.AppointmentSaveRequest;
+import dev.patika.veterinersistemi.dto.request.Appointment.AppointmentUpdateRequest;
 import dev.patika.veterinersistemi.dto.response.AppointmentResponse;
 import dev.patika.veterinersistemi.entity.Animal;
 import dev.patika.veterinersistemi.entity.Appointment;
@@ -68,10 +69,20 @@ public class AppointmentController {
     }
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResultData<AppointmentResponse> update(@Valid @RequestBody AppointmentResponse appointmentResponse ){
-        Appointment updateAppointment = this.modelMapper.forRequest().map(appointmentResponse,Appointment.class);
+    public ResultData<AppointmentResponse> update(@PathVariable Long id, @Valid @RequestBody AppointmentUpdateRequest appointmentUpdateRequest) {
+        Appointment updateAppointment = this.modelMapper.forRequest().map(appointmentUpdateRequest, Appointment.class);
+
+        // Yeni doktor ve hayvan kimliklerini al ve Appointment'in ilgili bilgilerini güncelle
+        Doctor doctor = this.doctorService.get(appointmentUpdateRequest.getDoctorId());
+        Animal animal = this.animalService.get(appointmentUpdateRequest.getAnimalId());
+        updateAppointment.setDoctor(doctor);
+        updateAppointment.setAnimal(animal);
+
+        // Appointment'in ID'sini ayarla
+        updateAppointment.setId(id);
+
         this.appointmentService.update(updateAppointment);
-        return ResultHelper.success(this.modelMapper.forResponse().map(updateAppointment,AppointmentResponse.class));
+        return ResultHelper.success(this.modelMapper.forResponse().map(updateAppointment, AppointmentResponse.class));
     }
 
     // Endpoint that creates a new appointment record

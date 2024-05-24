@@ -53,14 +53,20 @@ public class AnimalController {
         this.animalService.save(saveAnimal);
         return ResultHelper.created(this.modelMapper.forResponse().map(saveAnimal,AnimalResponse.class));
     }
-
-    // Hayvan güncelleme endpoint'i
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResultData<AnimalResponse> update(@Valid @RequestBody AnimalUpdateRequest animalUpdateRequest ){
-        Animal updateAnimal = this.modelMapper.forRequest().map(animalUpdateRequest,Animal.class);
+    public ResultData<AnimalResponse> update(@PathVariable Long id, @Valid @RequestBody AnimalUpdateRequest animalUpdateRequest) {
+        Animal updateAnimal = this.modelMapper.forRequest().map(animalUpdateRequest, Animal.class);
+
+        // Yeni müşteri kimliğini al ve hayvanın müşteri bilgilerini güncelle
+        Customer customer = this.customerService.get(animalUpdateRequest.getCustomerId());
+        updateAnimal.setCustomer(customer);
+
+        // Hayvanın ID'sini ayarla
+        updateAnimal.setId(id);
+
         this.animalService.update(updateAnimal);
-        return ResultHelper.success(this.modelMapper.forResponse().map(updateAnimal,AnimalResponse.class));
+        return ResultHelper.success(this.modelMapper.forResponse().map(updateAnimal, AnimalResponse.class));
     }
 
     // Hayvan silme endpoint'i
@@ -86,7 +92,7 @@ public class AnimalController {
 
         return ResultHelper.success(vaccineResponses);
     }
-    @GetMapping("/filterAnimalName") //http://localhost:8047/v1/animals/filter?name=Şila
+    @GetMapping("/filterAnimalName")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<AnimalResponse>> getAnimalsByName(@RequestParam("name") String name) {
         List<Animal> animals = this.animalService.getAnimalsByName(name);

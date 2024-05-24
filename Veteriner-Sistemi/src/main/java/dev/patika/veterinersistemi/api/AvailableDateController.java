@@ -7,6 +7,7 @@ import dev.patika.veterinersistemi.core.config.modelMapper.IModelMapperService;
 import dev.patika.veterinersistemi.core.config.result.Result;
 import dev.patika.veterinersistemi.core.config.result.ResultData;
 import dev.patika.veterinersistemi.core.config.utiles.ResultHelper;
+import dev.patika.veterinersistemi.dto.request.Available.AvailableDataUpdateRequest;
 import dev.patika.veterinersistemi.dto.request.Available.AvailableDateSaveRequest;
 import dev.patika.veterinersistemi.dto.response.AvailableDataResponse;
 import dev.patika.veterinersistemi.entity.AvailableDate;
@@ -25,7 +26,7 @@ public class AvailableDateController {
     private final IModelMapperService modelMapper;
 
 
-    //
+
     //Mevcut verileri belirli bir kimliğe göre alan end point
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -48,16 +49,23 @@ public class AvailableDateController {
     }
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResultData<AvailableDataResponse> update(@Valid @RequestBody AvailableDataResponse availableDataResponse ){
-        AvailableDate updateAvailableDate = this.modelMapper.forRequest().map(availableDataResponse,AvailableDate.class);
+    public ResultData<AvailableDataResponse> update(@PathVariable Long id, @Valid @RequestBody AvailableDataUpdateRequest availableDataUpdateRequest) {
+        AvailableDate updateAvailableDate = this.modelMapper.forRequest().map(availableDataUpdateRequest, AvailableDate.class);
+
+        // Yeni doktor kimliğini al ve AvailableDate'in doktor bilgilerini güncelle
+        Doctor doctor = this.doctorService.get(availableDataUpdateRequest.getDoctorId());
+        updateAvailableDate.setDoctor(doctor);
+
+        // AvailableDate'in ID'sini ayarla
+        updateAvailableDate.setId(id);
+
         this.availableDateService.update(updateAvailableDate);
-        return ResultHelper.success(this.modelMapper.forResponse().map(updateAvailableDate,AvailableDataResponse.class));
+        return ResultHelper.success(this.modelMapper.forResponse().map(updateAvailableDate, AvailableDataResponse.class));
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Result delete(@PathVariable("id") Long id) {
-        this.availableDateService.delete(id);
-        return ResultHelper.Ok();
+    public Result delete(@PathVariable("id") Long id) {this.availableDateService.delete(id);return ResultHelper.Ok();
     }
 }

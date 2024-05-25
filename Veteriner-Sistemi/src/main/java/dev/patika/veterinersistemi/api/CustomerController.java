@@ -81,7 +81,7 @@ import java.util.stream.Collectors;
         return  ResultHelper.cursor(customerResponsePage);
     }
     //müşterileri isme göre filtreleyen bir endpoint
-    @GetMapping("/filter") //http://localhost:8047/v1/customers/filter?name=John Doe örnek aram URL'si
+    @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<CustomerResponse>> getCustomersByName(@RequestParam("name") String name) {
         List<Customer> customers = this.customerService.getCustomersByName(name);

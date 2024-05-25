@@ -31,7 +31,7 @@ public class VaccineController {
     private final IModelMapperService modelMapper;
     private final IAnimalService animalService;
 
-
+    //Değerlendirme Formu 21:  Hayvana ait aşı kaydediliyor
     @PostMapping("/created")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<VaccineResponse> save(@Valid @RequestBody VaccineSaveRequest vaccineSaveRequest ){
@@ -75,6 +75,7 @@ public class VaccineController {
         this.vaccineService.update(updateVaccine);
         return ResultHelper.success(this.modelMapper.forResponse().map(updateVaccine, VaccineResponse.class));
     }
+    //Değerlendirme Formu 24:  Belirli bir hayvana ait tüm aşı kayıtları (sadece bir hayvanın tüm aşı kayıtları) listelenebiliyor
     @GetMapping("/animal/{animalId}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<VaccineResponse>> getVaccinesByAnimalId(@PathVariable("animalId") Long animalId) {
@@ -100,6 +101,7 @@ public class VaccineController {
 
         return ResultHelper.success(vaccineResponses);
     }
+    //Değerlendirme Formu 23:  Aşı koruyuculuk bitiş tarihine göre filtreleme: girilen tarih aralığında aşı koruyuculuk bitiş tarihi olan aşılar hayvan bilgileriyle birlikte doğru bir şekilde listeleniyor
     @GetMapping("/animal/filter/date")
     public ResultData<List<VaccineResponse>> getVaccinesByAnimalAndDateRange(
             @RequestParam("animalId") Long animalId,

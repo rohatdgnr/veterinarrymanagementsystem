@@ -34,7 +34,7 @@ public class AvailableDateController {
         AvailableDate availableDate = this.availableDateService.get(id);
         return ResultHelper.success(this.modelMapper.forResponse().map(availableDate,AvailableDataResponse.class));
     }
-    // Yeni bir kullanılabilir veri kaydı oluşturan  end point
+    //Değerlendirme Formu 16:  Doktor müsait günü kaydediliyor
     @PostMapping("/created")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<AvailableDataResponse> save(@Valid @RequestBody AvailableDateSaveRequest availableDateSaveRequest ){

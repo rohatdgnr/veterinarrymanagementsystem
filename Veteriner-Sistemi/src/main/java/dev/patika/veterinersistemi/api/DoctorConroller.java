@@ -22,7 +22,7 @@ public class DoctorConroller {
     private final IDoctorService doctorService;
     private final IModelMapperService modelMapper;
 
-    // Constructor based dependency injection
+
 
     // Doktorun detaylarını almak için GET endpoint'i
     @GetMapping("/{id}")
@@ -32,7 +32,7 @@ public class DoctorConroller {
         return ResultHelper.success(this.modelMapper.forResponse().map(doctor,DoctorResponse.class));
     }
 
-    // Yeni bir doktor kaydetmek için POST endpoint'i
+    // Değerlendirme Formu 15:  Doktor kaydediliyor
     @PostMapping("/created")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<DoctorResponse> save(@Valid @RequestBody DoctorSaveRequest doctorSaveRequest ){

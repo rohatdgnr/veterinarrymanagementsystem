@@ -20,7 +20,6 @@ public interface IAppointmentService {
     List<Appointment> getByDoctorId(Long doctorId);
     List<Appointment> getByAnimalId(Long animalId);
 
-    //List<Appointment> getAppointmentsByDateRange(String startDate, String endDate);
     List<Appointment> getAppointmentsByDateRange(LocalDate startDate, LocalDate endDate);
     boolean isAppointmentConflict(Long doctorId, LocalDateTime dateTime);
 

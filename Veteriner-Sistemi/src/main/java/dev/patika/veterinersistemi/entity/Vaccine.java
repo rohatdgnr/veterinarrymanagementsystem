@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "vaccines") //vaccines Entitylerimizin bulundugu sınıfımız
+@Table(name = "vaccines")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,11 +25,11 @@ public class Vaccine {
     @Column(name = "vaccine_code", nullable = false)
     private String code;
 
-    //@Temporal(TemporalType.DATE)
+
     @Column(name = "vaccine_protection_start_date")
     private LocalDate protectionStartDate;
 
-    //@Temporal(TemporalType.DATE)
+
     @Column(name = "vaccine_protection_finish_date")
     private LocalDate protectionFinishDate;
 

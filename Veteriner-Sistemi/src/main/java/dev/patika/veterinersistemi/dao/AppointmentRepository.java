@@ -17,10 +17,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
 
     List<Appointment> findByAnimalId(Long animalId);
 
-    // Doktor ID'sine göre randevuları bulma
+
     List<Appointment> findByDoctorId(Long doctorId);
     List<Appointment> findByAppointmentDateTimeBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
-  //  List<Appointment> findByAppointmentDateTimeBetween(LocalDateTime startDate, LocalDateTime endDate);
+
     List<Appointment> findByDoctorIdAndAppointmentDateTime(Long doctorId, LocalDateTime dateTime);
     @Query("SELECT a FROM Appointment a WHERE a.appointmentDateTime >= :startDate AND a.appointmentDateTime <= :endDate AND a.doctor.id = :doctorId")
     List<Appointment> findByDateRangeAndDoctorId(@Param("startDate") LocalDateTime startDate,

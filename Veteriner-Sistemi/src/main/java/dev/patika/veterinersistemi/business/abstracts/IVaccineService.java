@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IVaccineService {
 
-    // Aşıyı kaydetmek için
+
     Vaccine save(Vaccine vaccine, Long animalId);
 
     Vaccine get(Long id);
@@ -19,9 +19,9 @@ public interface IVaccineService {
     boolean delete (long id);
     List<Vaccine> getVaccinesByAnimalId(Long animalId);
 
-    // Belirli bir tarih aralığındaki aşıları getirmek için
+
     List<Vaccine> getVaccinesByDateRangeForAnimal(Long animalId, LocalDate startDate, LocalDate endDate);
-    //Aşı tarihine ve Animal ıd sine göre sorgulama
+
     List<Vaccine> findByAnimalIdAndProtectionStartDateBetween(Long animalId, LocalDate startDate, LocalDate endDate);
 
     List<Vaccine> getVaccinesByDateRange(LocalDate startDate, LocalDate endDate);

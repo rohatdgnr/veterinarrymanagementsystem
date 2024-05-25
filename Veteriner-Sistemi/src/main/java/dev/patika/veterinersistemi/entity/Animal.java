@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "animals")
-public class  Animal { //Animal Entitylerimizin bulundugu sınıfımız
+public class  Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "animal_id")
@@ -31,7 +31,6 @@ public class  Animal { //Animal Entitylerimizin bulundugu sınıfımız
     @Column(name = "animal_colour", length = 255)
     private String colour;
 
-    //@Temporal(TemporalType.DATE)
     @Column(name = "animal_date_of_birth")
     private LocalDate dateOfBirth;
 
@@ -43,7 +42,7 @@ public class  Animal { //Animal Entitylerimizin bulundugu sınıfımız
         dişi,
     }
     @ManyToOne
-    @JoinColumn(name = "customer_id") // Customer entity'sindeki id ile ilişkilendirir
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)

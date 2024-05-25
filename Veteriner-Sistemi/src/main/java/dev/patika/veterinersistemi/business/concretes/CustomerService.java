@@ -18,30 +18,30 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-// CustomerRepo bağımlılığını enjekte etmek için constructor
+
 public class CustomerService implements ICustomerService {
     private final CustomerRepository customerRepo;
     @Override
     public Customer save(Customer customer) {
-        return this.customerRepo.save(customer);// CustomerRepo'nun save metodu kullanılır
+        return this.customerRepo.save(customer);
     }
 
-    // Müşteriyi ID'ye göre getirmek için
+
     @Override
     public Customer get(long id) {
-        // CustomerRepo'daki findById kullanılır, eğer bulunamazsa NotFound exception fırlatılır
+
         return customerRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND));
     }
 
-    // Sayfalı olarak müşterileri getirmek için
+
     @Override
     public Page<Customer> cursor(int page, int pageSize) {
-        // Sayfalama için PageRequest kullanılır
+
         Pageable pageable = PageRequest.of(page,pageSize);
-        return this.customerRepo.findAll(pageable);// CustomerRepo'nun findAll metodu kullanılır
+        return this.customerRepo.findAll(pageable);
     }
 
-    // Müşteriyi güncellemek için
+
     @Override
     public Customer update(Customer customer) {
         this.get(customer.getId());
@@ -49,12 +49,12 @@ public class CustomerService implements ICustomerService {
     }
 
 
-    // Müşteri silmek için
+
     @Override
     public boolean delete(long id) {
-        Customer customer = this.get(id);// ID'ye göre müşteri getirilir
-        this.customerRepo.delete(customer);// CustomerRepo'nun delete metodu ile silinir
-        return true; // Silme işlemi başarılı olduğu için true döndürülür
+        Customer customer = this.get(id);
+        this.customerRepo.delete(customer);
+        return true;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CustomerService implements ICustomerService {
         return customerRepo.existsByMail(email);
     }
 
-    // İsim içeren müşterileri getirmek için
+
     @Override
     public List<Customer> getCustomersByName(String name) {
         return customerRepo.findByNameContainingIgnoreCase(name);// İsim içeren müşterileri getirir

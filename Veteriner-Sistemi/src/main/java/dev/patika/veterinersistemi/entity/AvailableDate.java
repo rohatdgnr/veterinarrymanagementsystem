@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "availabledates")
-public class AvailableDate { //AvailableDate Entitylerimizin bulundugu sınıfımız
+public class AvailableDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "availableDate_id")

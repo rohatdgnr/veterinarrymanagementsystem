@@ -22,7 +22,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class VaccineService implements IVaccineService {
-    // VaccineRepo bağımlılığını enjekte etmek için constructor
+
     private final VaccineRepository vaccineRepo;
     private final AnimalRepository animalRepo;
     @Override
@@ -35,27 +35,27 @@ public class VaccineService implements IVaccineService {
         return vaccineRepo.save(vaccine);
     }
 
-    // Aşıyı ID'ye göre getirmek için
+
     @Override
     public Vaccine get(Long id) {
         return this.vaccineRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND));
     }
 
-    // Sayfalı olarak aşıları getirmek için
+
     @Override
     public Page<Vaccine> cursor(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page,pageSize);
         return this.vaccineRepo.findAll(pageable);
     }
 
-    // Aşıyı güncellemek için
+
     @Override
     public Vaccine update(Vaccine vaccine) {
         this.get(vaccine.getId());
         return this.vaccineRepo.save(vaccine);
     }
 
-    // Aşıyı silmek için
+
     @Override
     public boolean delete(long id) {
         Vaccine vaccine = this.get(id);
@@ -63,7 +63,7 @@ public class VaccineService implements IVaccineService {
         return true;
     }
 
-    // Hayvan ID'sine göre aşıları getirmek için
+
     @Override
     public List<Vaccine> getVaccinesByAnimalId(Long animalId) {
         return vaccineRepo.findByAnimalId(animalId);
@@ -106,7 +106,7 @@ public class VaccineService implements IVaccineService {
     }
 @Override
     public boolean existsActiveVaccineByAnimalIdAndVaccineCode(Long animalId, String vaccineCode) {
-        // Belirtilen hayvan ID'sine ve aşı koduna sahip aktif bir aşının varlığını kontrol et
+
         return vaccineRepo.existsByAnimalIdAndCodeAndProtectionFinishDateAfter(animalId, vaccineCode, LocalDate.now());
     }
 

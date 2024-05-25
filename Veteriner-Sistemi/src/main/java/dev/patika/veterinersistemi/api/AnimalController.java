@@ -31,9 +31,7 @@ public class AnimalController {
     private final ICustomerService customerService;
     private final IModelMapperService modelMapper;
 
-    // Constructor-based dependency injection
 
-    // Belirli bir hayvanın detaylarını getiren endpoint
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<AnimalResponse> get (@PathVariable("id") Long id) {
@@ -41,7 +39,7 @@ public class AnimalController {
         return ResultHelper.success(this.modelMapper.forResponse().map(animal,AnimalResponse.class));
     }
 
-    // Yeni hayvan ekleme endpoint'i
+    // Değerlendirme Formu 10: Hayvan sahibi kaydediliyor
     @PostMapping("/created")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<AnimalResponse> save(@Valid @RequestBody AnimalSaveRequest animalSaveRequest ){
@@ -81,17 +79,14 @@ public class AnimalController {
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<VaccineResponse>> getVaccinesForAnimal(@PathVariable("id") Long id) {
         Animal animal = this.animalService.get(id);
-
-        // Burada, animal.getVaccines() şeklinde hayvana ait tüm aşı kayıtlarını alabilirsiniz
         List<Vaccine> vaccines = animal.getVaccines();
-
-        // Bu aşı kayıtlarını VaccineResponse'a dönüştürerek döndürebilirsiniz
         List<VaccineResponse> vaccineResponses = vaccines.stream()
                 .map(vaccine -> this.modelMapper.forResponse().map(vaccine, VaccineResponse.class))
                 .collect(Collectors.toList());
 
         return ResultHelper.success(vaccineResponses);
     }
+   // Değerlendirme Formu 13: Hayvanlar isme göre filtreleniyor
     @GetMapping("/filterAnimalName")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<AnimalResponse>> getAnimalsByName(@RequestParam("name") String name) {
@@ -104,6 +99,7 @@ public class AnimalController {
 
         return ResultHelper.success(animalResponses);
     }
+    // Değerlendirme Formu 11: Hayvan sahipleri isme göre filtreleniyor
     @GetMapping("/customer/filterId{customerId}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<AnimalResponse>> getAnimalsByCustomerId(@PathVariable("customerId") Long customerId) {

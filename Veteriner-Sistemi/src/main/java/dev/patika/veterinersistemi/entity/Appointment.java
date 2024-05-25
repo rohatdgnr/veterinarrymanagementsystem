@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "appointments")
-public class Appointment { //Appointment Entitylerimizin bulundugu sınıfımız
+public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "appointment_id")
     private Long id;
 
-    //@Temporal(TemporalType.TIME)
+
     @Column(name = "appointment_date")
     private LocalDateTime appointmentDateTime;
 

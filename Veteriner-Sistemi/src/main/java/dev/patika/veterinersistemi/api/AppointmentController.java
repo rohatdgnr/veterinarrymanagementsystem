@@ -85,14 +85,14 @@ public class AppointmentController {
         return ResultHelper.success(this.modelMapper.forResponse().map(updateAppointment, AppointmentResponse.class));
     }
 
-    // Endpoint that creates a new appointment record
+    //Değerlendirme Formu 17:  Randevu kaydediliyor
     @PostMapping("/created")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<AppointmentResponse> save(@Valid @RequestBody AppointmentSaveRequest appointmentSaveRequest) {
 
         Appointment saveAppointment = modelMapper.forResponse().map(appointmentSaveRequest, Appointment.class);
 
-        // Doktorun müsait günlerini kontrol etme
+        //Değerlendirme Formu 16,18:  Doktor müsait günü kaydediliyor
         Doctor doctor = doctorService.get(appointmentSaveRequest.getDoctorId());
         if (!availableDateService.isDoctorAvailableOnDate(doctor.getId(), appointmentSaveRequest.getAppointmentDateTime().toLocalDate())) {
             return ResultHelper.errorWithData("Doktor müsait değil", null, HttpStatus.BAD_REQUEST);
@@ -109,16 +109,15 @@ public class AppointmentController {
         return ResultHelper.created(modelMapper.forResponse().map(saveAppointment, AppointmentResponse.class));
     }
 
-    // Endpoint that retrieves an appointment by a specific appointment ID
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<AppointmentResponse> get(@PathVariable("id") Long id) {
-        // Retrieves the appointment associated with the given appointment ID
         Appointment appointment = this.appointmentService.get(id);
         return ResultHelper.success(this.modelMapper.forResponse().map(appointment, AppointmentResponse.class));
     }
 
-    // Endpoint that retrieves appointments within a specific date range
+   // Değerlendirme Formu 20:  Randevular kullanıcı tarafından girilen tarih aralığına ve doktora göre filtreleniyor
     @GetMapping("/filter/dateANDdoctor/appointments")
     public ResultData<List<AppointmentResponse>> getAppointmentsByDateRangeDoctor(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -144,6 +143,7 @@ public class AppointmentController {
 
         return ResultHelper.success(appointmentResponses);
     }
+   // Değerlendirme Formu 19:  Randevular kullanıcı tarafından girilen tarih aralığına ve hayvana göre filtreleniyor
     @GetMapping("/filter/dateANDanimal")
     public ResultData<List<AppointmentResponse>> getAppointmentsByDateRangeAnimal(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,

@@ -13,47 +13,46 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DoctorService implements IDoctorService {
-    // DoctorRepo bağımlılığını enjekte etmek için constructor
+
     private final DoctorRepository doctorRepo;
 
-    // Constructor enjeksiyonu
+
     public DoctorService(DoctorRepository doctorRepo) {
         this.doctorRepo = doctorRepo;
     }
 
-    // Doktoru kaydetmek için
+
     @Override
     public Doctor save(Doctor doctor) {
-        return this.doctorRepo.save(doctor); // DoctorRepo'nun save metodu kullanılır
+        return this.doctorRepo.save(doctor);
     }
 
-    // Doktoru ID'ye göre getirmek için
     @Override
     public Doctor get(Long id) {
-        // DoctorRepo'daki findById kullanılır, eğer bulunamazsa NotFound exception fırlatılır
+
         return this.doctorRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND));
     }
 
-    // Sayfalı olarak doktorları getirmek için
+
     @Override
     public Page<Doctor> cursor(int page, int pageSize) {
-        // Sayfalama yapmak için PageRequest kullanılır
+
         Pageable pageable = PageRequest.of(page,pageSize);
-        return this.doctorRepo.findAll(pageable);// DoctorRepo'nun findAll metodu kullanılır
+        return this.doctorRepo.findAll(pageable);
     }
 
-    // Doktoru güncellemek için
+
     @Override
     public Doctor update(Doctor doctor) {
         this.get(doctor.getId());
-        return this.doctorRepo.save(doctor);// DoctorRepo'nun save metodu kullanılır
+        return this.doctorRepo.save(doctor);
     }
 
-    // Doktoru silmek için
+
     @Override
     public boolean delete(long id) {
         Doctor doctor=this.get(id);
-        this.doctorRepo.delete(doctor);// DoctorRepo'nun delete metodu ile silinir
-        return true;// Silme işlemi başarılı olduğu için true döndürülür
+        this.doctorRepo.delete(doctor);
+        return true;
     }
 }

@@ -18,44 +18,41 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AnimalService implements IAnimalService {
-    // AnimalRepo bağımlılığını enjekte etmek için constructor
+
     private final AnimalRepository animalRepo;
 
-    // Constructor enjeksiyonu
 
-    // Yeni bir hayvan kaydetmek için
     @Override
     public Animal save(Animal animal) {
-        return animalRepo.save(animal);// AnimalRepo'nun save metodu kullanılır
+        return animalRepo.save(animal);
     }
 
-    // Hayvanı ID'ye göre getirmek için
     @Override
     public Animal get(Long id) {
-        // AnimalRepo'daki findById kullanılır, eğer bulunamazsa NotFound exception fırlatılır
+
         return this.animalRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND));
     }
 
-    // Sayfalı olarak hayvanları getirmek için
+
     @Override
     public Page<Animal> cursor(int page, int pageSize) {
-        // Sayfalama için PageRequest kullanılır
+
         Pageable pageable = PageRequest.of(page,pageSize);
-        return this.animalRepo.findAll(pageable);// AnimalRepo'nun findAll metodu kullanılır
+        return this.animalRepo.findAll(pageable);
     }
 
-    // Hayvanı güncellemek için
+
     @Override
     public Animal update(Animal animal) {
         this.get(animal.getId());
-        return this.animalRepo.save(animal);// AnimalRepo'nun save metodu kullanılır
+        return this.animalRepo.save(animal);
     }
 
-    // Hayvanı silmek için
+
     @Override
-    public boolean delete(long id) {// ID'ye göre hayvan getirilir
-        Animal animal =this.get(id); // AnimalRepo'nun delete metodu ile silinir
-        this.animalRepo.delete(animal);// Silme işlemi başarılı olduğu için true döndürülür
+    public boolean delete(long id) {
+        Animal animal =this.get(id);
+        this.animalRepo.delete(animal);
         return true;
     }
 

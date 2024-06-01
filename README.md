@@ -45,53 +45,74 @@ Below is a list of the main endpoints the API offers:
 
 
 
-| Endpoint                                    | HTTP Metodu | Açıklama                                                                           |
-|---------------------------------------------|:------------|------------------------------------------------------------------------------------|
-| **customers**                               |             |                                                                                    |
-| `/api/v1/customers/{id}`                    | GET         | Belirtilen ID'ye sahip hayvan sahibini getirir                                     |
-| `/api/v1/customers/{id}`                    | PUT         | Belirtilen ID'ye sahip hayvan sahibini günceller                                   |
-| `/api/v1/customers/{id}`                    | DELETE      | Belirtilen ID'ye sahip hayvan sahibini siler                                       |
-| `/api/v1/customers`                         | GET         | Tüm hayvan sahiplerini getirir                                                     |
-| `/api/v1/customers`                         | POST        | Hayvan sahibi ekler                                                                |
-| `/api/v1/customers/searchByName`            | GET         | İsme gore hayvan sahiplerini getirir                                               |
-|                                             |             |                                                                                    |
-| **animals**                                 |             |                                                                                    |
-| `/api/v1/animals/{id}`                      | GET         | Belirtilen ID'ye sahip hayvanı getirir                                             |
-| `/api/v1/animals/{id}`                      | PUT         | Belirtilen ID'ye sahip hayvanı günceller                                           |
-| `/api/v1/animals/{id}`                      | DELETE      | Belirtilen ID'ye sahip hayvanı siler                                               |
-| `/api/v1/animals`                           | GET         | Tüm hayvanları getirir                                                             |
-| `/api/v1/animals`                           | POST        | Hayvan ekler                                                                       |
-| `/api/v1/animals/searchByName`              | GET         | İsme göre hayvanları filtreler                                                     |
-| `/api/v1/animals/searchByCustomer`          | GET         | Hayvan sahiplerine göre hayvanları filtreler                                       |
-|                                             |                                    |             |                                                                                    |
-| **vaccines**                                |             |                                                                                    |
-| `/api/v1/vaccines/{id}`                     | GET         | Belirtilen ID'ye sahip aşıyı getirir                                               |
-| `/api/v1/vaccines/{id}`                     | PUT         | Belirtilen ID'ye sahip aşıyı günceller                                             |
-| `/api/v1/vaccines/{id}`                     | DELETE      | Belirtilen ID'ye sahip aşıyı siler                                                 |
-| `/api/v1/vaccines`                          | GET         | Tum aşıları getirir                                                                |
-| `/api/v1/vaccines`                          | POST        | Aşı ekler                                                                          |
-| `/api/v1/vaccines/searchByVaccinationRange` | GET         | Girilen tarih araligina gore aşı kayıtlarını getirir                               |
-| `/api/v1/vaccines/searchByAnimal`           | GET         | Belirli bir hayvana ait tüm aşı kayıtlarını getirir                                |
-|                                             |             |                                                                                    |
-| **doctors**                                 |             |                                                                                    |
-| `/api/v1/doctors/{id}`                      | GET         | Belirtilen ID'ye sahip doktoru getirir                                             |
-| `/api/v1/doctors/{id}`                      | PUT         | Belirtilen ID'ye sahip doktoru günceller                                           |
-| `/api/v1/doctors/{id}`                      | DELETE      | Belirtilen ID'ye sahip doktoru siler                                               |
-| `/api/v1/doctors`                           | GET         | Tum doktorlari getirir                                                             |
-| `/api/v1/doctors`                           | POST        | Doktor ekler                                                                       |
-|                                             |             |                                                                                    |
-| **available_dates**                         |             |                                                                                    |
-| `/api/v1/available_dates/{id}`              | GET         | Belirtilen ID'ye sahip müsait günü getirir                                         |
-| `/api/v1/available_dates/{id}`              | PUT         | Belirtilen ID'ye sahip müsait günü günceller                                       |
-| `/api/v1/available_dates/{id}`              | DELETE      | Belirtilen ID'ye sahip müsait günü siler                                           |
-| `/api/v1/available_dates`                   | GET         | Tüm müsait günü getirir                                                            |
-| `/api/v1/available_dates`                   | POST        | Müsait gün ekler                                                                   |
-|                                             |             |                                                                                    |
-| **appointments**                            |             |                                                                                    |
-| `/api/v1/appointments/{id}`                 | GET         | Belirtilen ID'ye sahip randevuyu getirir                                           |
-| `/api/v1/appointments/{id}`                 | PUT         | Belirtilen ID'ye sahip randevuyu günceller                                         |
-| `/api/v1/appointments/{id}`                 | DELETE      | Belirtilen ID'ye sahip randevuyu siler                                             |
-| `/api/v1/appointments`                      | GET         | Tüm randevulari getirir                                                            |
-| `/api/v1/appointments`                      | POST        | Randevu ekler                                                                      |
-| `/api/v1/appointments/searchByDoctorAndDateRange`             | GET         | Kullanıcı tarafından girilen tarih aralığına ve doktora göre randevuları filtreler |
-| `/api/v1/appointments/searchByAnimalAndDateRange`             | GET         | Kullanıcı tarafından girilen tarih aralığına ve hayvana göre randevuları filtreler |
+# Veterinary System API Endpoints
+
+## AvailableDateController
+
+| HTTP Method | Endpoint                          | Description                                                               | Response Type                         |
+|-------------|-----------------------------------|---------------------------------------------------------------------------|---------------------------------------|
+| GET         | /v1/available-dates/{id}          | Get available date details by ID                                          | ResultData<AvailableDataResponse>     |
+| POST        | /v1/available-dates/created       | Create a new available date                                               | ResultData<AvailableDataResponse>     |
+| PUT         | /v1/available-dates/update/{id}   | Update available date details by ID                                       | ResultData<AvailableDataResponse>     |
+| DELETE      | /v1/available-dates/{id}          | Delete available date by ID   
+
+## CustomerController
+
+| HTTP Method | Endpoint                          | Description                                                               | Response Type                         |
+|-------------|-----------------------------------|---------------------------------------------------------------------------|---------------------------------------|
+| POST        | /api/v1/customers/created         | Create a new customer                                                     | ResultData<CustomerResponse>          |
+| GET         | /api/v1/customers/{id}            | Get customer details by ID                                                | ResultData<CustomerResponse>          |
+| PUT         | /api/v1/customers/update/{id}     | Update customer details by ID                                             | ResultData<CustomerResponse>          |
+| DELETE      | /api/v1/customers/{id}            | Delete customer by ID                                                     | Result                                |
+| GET         | /api/v1/customers/customersList   | Get a paginated list of customers                                         | ResultData<CursorResponse<CustomerResponse>> |
+| GET         | /api/v1/customers/filter          | Get customers filtered by name    
+
+## DoctorController
+
+| HTTP Method | Endpoint                          | Description                                                               | Response Type                         |
+|-------------|-----------------------------------|---------------------------------------------------------------------------|---------------------------------------|
+| GET         | /v1/doctors/{id}                  | Get doctor details by ID                                                  | ResultData<DoctorResponse>            |
+| POST        | /v1/doctors/created               | Create a new doctor                                                       | ResultData<DoctorResponse>            |
+| PUT         | /v1/doctors/update/{id}           | Update doctor details by ID                                               | ResultData<DoctorResponse>            |
+| DELETE      | /v1/doctors/{id}                  | Delete doctor by ID   
+
+## VaccineController
+
+| HTTP Method | Endpoint                          | Description                                                               | Response Type                         |
+|-------------|-----------------------------------|---------------------------------------------------------------------------|---------------------------------------|
+| POST        | /v1/vaccines/created              | Create a new vaccine                                                      | ResultData<VaccineResponse>           |
+| GET         | /v1/vaccines/{id}                 | Get vaccine details by ID                                                 | ResultData<VaccineResponse>           |
+| DELETE      | /v1/vaccines/{id}                 | Delete vaccine by ID                                                      | Result                                |
+| PUT         | /v1/vaccines/update/{id}          | Update vaccine details by ID                                              | ResultData<VaccineResponse>           |
+| GET         | /v1/vaccines/animal/{animalId}    | Get all vaccines for a specific animal                                    | ResultData<List<VaccineResponse>>     |
+| GET         | /v1/vaccines/date-range           | Get vaccines within a specific date range                                 | ResultData<List<VaccineResponse>>     |
+| GET         | /v1/vaccines/animal/filter/date   | Get vaccines for a specific animal within a date range                    | ResultData<List<VaccineResponse>>     |
+
+
+# AnimalController
+
+| HTTP Method | Endpoint                              | Description                                                            | Response Type                     |
+|-------------|---------------------------------------|------------------------------------------------------------------------|----------------------------------|
+| GET         | /v1/animals/{id}                      | Get an animal by ID                                                    | ResultData<AnimalResponse>       |
+| POST        | /v1/animals/created                   | Save a new animal                                                      | ResultData<AnimalResponse>       |
+| PUT         | /v1/animals/update/{id}               | Update an existing animal by ID                                        | ResultData<AnimalResponse>       |
+| DELETE      | /v1/animals/{id}                      | Delete an animal by ID                                                 | Result                           |
+| GET         | /v1/animals/{id}/vaccines             | Get all vaccines for a specific animal by animal ID                    | ResultData<List<VaccineResponse>>|
+| GET         | /v1/animals/filterAnimalName          | Get animals filtered by name                                           | ResultData<List<AnimalResponse>> |
+| GET         | /v1/animals/customer/filterId{customerId} | Get animals filtered by customer ID                                     | ResultData<List<AnimalResponse>> |
+| GET         | /v1/animals/customer/filterCustomerName/{customerName} | Get animals filtered by customer name                                   | ResultData<List<AnimalResponse>> |
+
+
+# AppointmentController
+
+| HTTP Method | Endpoint                                               | Description                                                                    | Response Type                        |
+|-------------|--------------------------------------------------------|--------------------------------------------------------------------------------|-------------------------------------|
+| GET         | /v1/appointments/filter/doctor/{doctorId}              | Get appointments by doctor ID                                                  | ResultData<List<AppointmentResponse>>|
+| DELETE      | /v1/appointments/{id}                                  | Delete an appointment by ID                                                    | Result                              |
+| GET         | /v1/appointments/filter/animal/{animalId}              | Get appointments by animal ID                                                  | ResultData<List<AppointmentResponse>>|
+| PUT         | /v1/appointments/update/{id}                           | Update an existing appointment by ID                                           | ResultData<AppointmentResponse>     |
+| POST        | /v1/appointments/created                               | Save a new appointment                                                         | ResultData<AppointmentResponse>     |
+| GET         | /v1/appointments/{id}                                  | Get an appointment by ID                                                       | ResultData<AppointmentResponse>     |
+| GET         | /v1/appointments/filter/dateANDdoctor/appointments     | Get appointments by date range and optional doctor ID                          | ResultData<List<AppointmentResponse>>|
+| GET         | /v1/appointments/filter/dateANDanimal                  | Get appointments by date range and optional animal ID                          | ResultData<List<AppointmentResponse>>|
+| GET         | /v1/appointments/filterAnimalName/{animalName}         | Get appointments by animal name                                                | ResultData<List<AppointmentResponse>>|

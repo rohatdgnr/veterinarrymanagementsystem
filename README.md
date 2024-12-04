@@ -8,7 +8,7 @@
 - Veteriner Yönetim Sistemi, veteriner kliniklerinin günlük işlerini düzenlemek ve yönetmek amacıyla oluşturulmuş bir REST API'dir. Bu API ile veteriner çalışanının veteriner doktorları, müşterileri, hayvanları ve aşılarını, randevuları yönetmesi sağlanır.
 
 # Veterinary Management System
-- Veterinary Management System is a REST API created to organize and manage the daily affairs of veterinary clinics. With this API, the veterinary worker is enabled to manage veterinarians, customers, animals and their vaccinations, and appointments.
+- Veterinary Management System is a REST API created to organize and manage the daily affairs of veterinary clinics. With this API, the veterinary worker is enabled to manage veterinarians, customers, animals and their vaccinations, and appointments..
 
 # Kullanılan Teknolojiler / Used Technologies
 - Java                     
